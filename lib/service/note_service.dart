@@ -5,7 +5,7 @@ import 'package:rest_api_flutter/model/note_model.dart';
 class NoteService {
   static Future<List<NoteModel>> fetchPosts() async {
     final response = await http.get(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+      Uri.parse('https://fakestoreapi.com/products'),
     );
 
     if (response.statusCode == 200) {
@@ -23,13 +23,13 @@ class NoteService {
 
   static Future<NoteModel> createPost(NoteModel note) async {
     final response = await http.post(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+      Uri.parse('https://fakestoreapi.com/products'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'userId': note.userId,
-        'title': note.title,
-        'body': note.body,
-      }),
+      // body: json.encode({
+      //   'userId': note.userId,
+      //   'title': note.title,
+      //   'body': note.body,
+      // }),
     );
 
     if (response.statusCode == 201) {
@@ -41,7 +41,7 @@ class NoteService {
 
   static Future<void> deletePost(String postId) async {
     final response = await http.delete(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts/${postId}'),
+      Uri.parse('https://fakestoreapi.com/products${postId}'),
     );
 
     if (response.statusCode != 200) {

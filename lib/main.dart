@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rest_api_flutter/home/home_screen.dart';
+import 'package:rest_api_flutter/pages/home/home_screen.dart';
 import 'package:rest_api_flutter/provider/note_provider.dart';
 
 void main() {

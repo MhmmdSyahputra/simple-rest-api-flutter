@@ -4,17 +4,32 @@ import 'package:rest_api_flutter/service/note_service.dart';
 
 class NoteProvider with ChangeNotifier {
   List<NoteModel> _noteList = [];
+  List<NoteModel> _filteredNoteList = [];
 
   List<NoteModel> get noteList => _noteList;
+  List<NoteModel> get filteredNoteList => _filteredNoteList;
 
   Future<void> fetchData() async {
     try {
       _noteList = await NoteService.fetchPosts();
+      _filteredNoteList = _noteList; // Initialize filtered list with all notes
       notifyListeners();
     } catch (e) {
-      // Handle error, e.g., show an error message
       print('Error fetching data: $e');
     }
+  }
+
+  void getFilteredNotes(String searchTerm) {
+    if (searchTerm.isEmpty) {
+      _filteredNoteList = _noteList; // Show all notes if search term is empty
+    } else {
+      _filteredNoteList = _noteList
+          .where((note) =>
+              note.title.toLowerCase().contains(searchTerm.toLowerCase()) ||
+              note.desc.toLowerCase().contains(searchTerm.toLowerCase()))
+          .toList();
+    }
+    notifyListeners(); // Notify listeners after updating the filtered list
   }
 
   Future<void> addNote(NoteModel newNote) async {

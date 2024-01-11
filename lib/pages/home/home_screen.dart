@@ -10,6 +10,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController _searchKeyController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -19,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final prov_schedule = Provider.of<NoteProvider>(context);
+    final prov_note = Provider.of<NoteProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -31,29 +33,58 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: prov_schedule.noteList.map((data) {
-            return Card(
-              margin: EdgeInsets.symmetric(vertical: 5),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Text(
-                    data.title,
-                    maxLines: 1,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+          children: [
+            Container(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: _searchKeyController,
+                  onChanged: (value) {
+                    // Panggil fungsi filter saat nilai pencarian berubah
+                    prov_note.getFilteredNotes(value);
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: Icon(Icons.clear),
+                    labelText: 'Search',
+                    hintText: 'hint text',
+                    border: OutlineInputBorder(),
                   ),
-                  subtitle: Text(
-                    data.body,
-                    maxLines: 2,
+                )),
+            Column(
+              children: prov_note.filteredNoteList.map((data) {
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 5),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      leading: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                          maxWidth: 64,
+                          maxHeight: 64,
+                        ),
+                        child: Image.network(data.image, fit: BoxFit.cover),
+                      ),
+                      title: Text(
+                        data.title,
+                        maxLines: 1,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'price: ${data.price.toString()}',
+                        maxLines: 2,
+                      ),
+                      trailing: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                    ),
                   ),
-                  trailing: Icon(
-                    Icons.delete,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
     );
